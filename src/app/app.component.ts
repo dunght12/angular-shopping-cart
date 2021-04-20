@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
       name: 'iPhone 12, 128GB',
       description: 'iPhone 12 128GB, White',
       thumbnail:
-        'https://cdn.nguyenkimmall.com/images/thumbnails/600/336/detailed/698/10047704-dien-thoai-iphone-12-128gb-trang-1.jpg',
+        https://cdn.nguyenkimmall.com/images/thumbnails/600/336/detailed/698/10047704-dien-thoai-iphone-12-128gb-trang-1.jpg",
       price: 965.99,
       quantity: 1,
     },
@@ -55,25 +55,28 @@ export class AppComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.updateCartSummary();
+    // this.updateCartSummary();
   }
 
+  ngDoCheck() {
+    this.updateCartSummary();
+  }
   updateCartSummary() {
-    // let numberItems = 0;
+    let numberItems = 0;
     this.numberItems = 0;
     let subTotal = 0;
     let tax = 0;
     let total = 0;
     let discount = 0;
     for (const product of this.products) {
-      console.log(product,'hhahahaha');
-      
-      this.numberItems += product.quantity;
-      // subTotal += product.price * product.quantity;
-      // tax = ((subTotal - discount) * this.taxPercent) / 100;
-      // total = subTotal + tax;
+      // console.log(product, 'hhahahaha');
+
+      numberItems += product.quantity;
+      subTotal += product.price * product.quantity;
+      tax = ((subTotal - discount) * this.taxPercent) / 100;
+      total = subTotal + tax;
     }
-    // this.numberItems = numberItems;
+    this.numberItems = numberItems;
     this.subTotal = subTotal;
     this.tax = tax;
     this.total = total;
@@ -92,22 +95,26 @@ export class AppComponent implements OnInit {
     this.updateCartSummary();
   }
 
-  // update lại số lượng sau thay đổi
-  // handleupdateQtyProduct(data:{id:string, quantity:number}) {
-  //   const product = this.products.find(item => item.id === data.id);
-  //   if(product){
-  //     product.quantity = data.quantity || 0;
-  //   }
-  //   this.updateCartSummary();
-  // }
-
   handleupdateQtyProduct(event: any) {
-    // const product = this.products.find(item => item.id === data.id);
-    // if(event.value){
-      // console.warn(event);
-      this.products = event;
-    // }
-    this.updateCartSummary();
+    console.log('event: ', event);
+
+    // this.products.forEach((e) => {
+    //   if (e.id != event.id) {
+    //     this.numberItems = Number(this.numberItems) + Number(e.quantity);
+    //   }
+    // });
+    this.numberItems = 0;
+    // update số lượng thay đổi vào component cha
+    const product1 = this.products.find((item) => item.id == event.id);
+    if (product1) {
+      product1.quantity = event.value || 0;
+    }
+
+    // console.log(product1, 'product1');
+    for (let i = 0; i < this.products.length; i++) {
+      this.numberItems += this.products[i].quantity;
+    }
+    console.log(this.numberItems);
   }
 
   // nhập mã giảm giá
@@ -129,6 +136,4 @@ export class AppComponent implements OnInit {
       alert('Please check promotion code again. Try code : DC20, DC10, ....');
     }
   }
-
- 
 }
